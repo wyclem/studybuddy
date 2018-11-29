@@ -1,0 +1,35 @@
+<!--
+  Generated template for the NoteDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>note-detail</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <h2>{{ note.getGroupKey() }}</h2>
+  <h2>{{ note.getName() }}</h2>
+  <p *ngFor="let textNote of note.getTextNotes()">{{ textNote }}</p>
+  <ion-item>
+    <ion-input [(ngModel)]="newTextNote" placeholder="New Note..."></ion-input>
+  </ion-item>
+  <button ion-button (click)="addNewTextNote()">Add New Text Note</button>
+  <div *ngFor="let imageNote of note.getImageNotes()">
+    <img [src]="imageNote">
+  </div>
+  <div>
+    <button ion-button (click)="addNewImageNote()">Add New Image</button>
+  </div>
+  <div>
+    <button ion-button (click)="saveNote()">Save</button>
+    <button ion-button (click)="cancelNote()">Cancel</button>
+  </div>
+
+</ion-content>

@@ -5,12 +5,25 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
+import { LoginPage } from '../pages/login/login';
 import { HomePage } from '../pages/home/home';
+import { GroupDetailPage } from '../pages/group-detail/group-detail';
+import { EventsPage } from '../pages/events/events';
+import { NotesPage } from '../pages/notes/notes';
+import { EventDetailPage } from '../pages/event-detail/event-detail';
+import { NoteDetailPage } from '../pages/note-detail/note-detail';
+import { StudyBuddyServiceProvider } from '../providers/study-buddy-service/study-buddy-service';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    GroupDetailPage,
+    EventsPage,
+    NotesPage,
+    EventDetailPage,
+    NoteDetailPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
@@ -19,12 +32,19 @@ import { HomePage } from '../pages/home/home';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    GroupDetailPage,
+    EventsPage,
+    NotesPage,
+    EventDetailPage,
+    NoteDetailPage,
+    LoginPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    StudyBuddyServiceProvider
   ]
 })
 export class AppModule {}

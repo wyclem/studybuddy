@@ -1,14 +1,20 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton="true">
     <ion-title>
-      Ionic Blank
+      Groups
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <h2>Welcome {{ user.getUserName() }}!</h2>
+  <ion-list>
+    <ion-item *ngFor="let group of groups">
+      <h3 (click)="visitGroup(group.getKey())">{{ group.getName() }}</h3>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="newGroupName" placeholder="New Group..."></ion-input>
+    </ion-item>
+  </ion-list>
+  <button ion-button (click)="addGroup()">Add Group</button>
 </ion-content>
