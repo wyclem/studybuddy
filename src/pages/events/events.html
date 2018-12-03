@@ -17,7 +17,9 @@
 
   <ion-list>
     <ion-item *ngFor="let event of events">
-      <ion-label (click)="viewEvent(event)">{{ event.getName() }}</ion-label>
+      <p (click)="viewEvent(event)">{{ event.getName() }}</p>
+      <button ion-button *ngIf="event.getOwnerKey() === user.getUserKey()" (click)="editEvent(event)">Edit</button>
+      <button ion-button *ngIf="event.getOwnerKey() === user.getUserKey()" (click)="removeEvent(event)">Cancel</button>
     </ion-item>
     <ion-item>
       <ion-input [(ngModel)]="newEventName" placeholder="New Event..."></ion-input>

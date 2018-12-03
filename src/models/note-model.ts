@@ -5,13 +5,15 @@ export class Note {
   private imageNotes: string[];
   private groupKey: string;
   private noteKey: string;
+  private ownerKey: string;
 
-  constructor(name: string, text: string[], images: string[], groupKey: string, noteKey: string) {
+  constructor(name: string, text: string[], images: string[], groupKey: string, noteKey: string, ownerKey: string) {
     this.noteName = name;
     this.textNotes = text;
     this.imageNotes = images;
     this.groupKey = groupKey;
     this.noteKey = noteKey;
+    this.ownerKey = ownerKey;
   }
 
   public setName(newName: string) {
@@ -44,5 +46,9 @@ export class Note {
 
   public getNoteKey() {
     return this.noteKey;
+  }
+
+  public getOwnerKey() {
+    return this.ownerKey;
   }
 }

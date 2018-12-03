@@ -5,14 +5,16 @@ export class Event {
   private eventAttendees: string[];
   private groupKey: string;
   private eventKey: string;
+  private ownerKey: string;
 
-  constructor(name: string, location: string, time: string, attendees: string[], groupKey: string, eventKey: string) {
+  constructor(name: string, location: string, time: string, attendees: string[], groupKey: string, eventKey: string, ownerKey: string) {
     this.eventName = name;
     this.eventLocation = location;
     this.eventTime = time;
     this.eventAttendees = attendees;
     this.groupKey = groupKey;
     this.eventKey = eventKey;
+    this.ownerKey = ownerKey;
   }
 
   public setName(newName: string) {
@@ -53,5 +55,9 @@ export class Event {
 
   public getEventKey() {
     return this.eventKey;
+  }
+
+  public getOwnerKey() {
+    return this.ownerKey;
   }
 }

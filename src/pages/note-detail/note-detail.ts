@@ -19,31 +19,41 @@ export class NoteDetailPage {
   private groupKey: string;
   private note: Note;
   private newTextNote: string ='';
+  private editing: boolean;
+  private textNotesCopy: string[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private studyBuddyService: StudyBuddyServiceProvider) {
+    this.note = undefined;
     this.groupKey = this.navParams.get("groupKey");
+    this.editing = this.navParams.get("editing");
     let noteKey = this.navParams.get("noteKey");
     if (noteKey === undefined) {
       let name = this.navParams.get("noteName");
       let text = [];
       let images = [];
       let key = "";
-      this.note = new Note(name, text, images, this.groupKey, key);
+      let ownerKey = this.studyBuddyService.getActiveUser().getUserKey();
+      this.note = new Note(name, text, images, this.groupKey, key, ownerKey);
+      this.textNotesCopy = this.note.getTextNotes();
     } else {
       this.note = this.studyBuddyService.getNoteByKey(noteKey);
+      this.textNotesCopy = this.note.getTextNotes();
     }
   }
 
   addNewTextNote() {
     if (this.newTextNote != "") {
-      let textNotes = this.note.getTextNotes();
-      textNotes.push(this.newTextNote);
-      this.note.setTextNotes(textNotes);
+      this.textNotesCopy.push(this.newTextNote);
       this.newTextNote = '';
     }
   }
 
+  removeNote(index: number) {
+    this.textNotesCopy.splice(index, 1);
+  }
+
   saveNote() {
+    this.note.setTextNotes(this.textNotesCopy);
     if (this.note.getNoteKey() === "") {
       this.studyBuddyService.addNote(this.note);
     } else {

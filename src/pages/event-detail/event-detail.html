@@ -15,10 +15,11 @@
 
 <ion-content padding>
   <h2>{{ event.getName() }}</h2>
-  <div *ngIf="event.getEventKey() === ''; else static">
-    <h3>Location: </h3>
-    <p>{{ newEventLocation }}</p>
-    <ion-input [(ngModel)]="newEventLocation" placeholder="Location..."></ion-input>
+  <div *ngIf="editing; else static">
+    <ion-item>
+      <ion-label stacked>Location:</ion-label>
+      <ion-input [(ngModel)]="newEventLocation" placeholder="Location..."></ion-input>
+    </ion-item>
     <ion-item>
       <ion-label>Month</ion-label>
       <ion-select [(ngModel)]="newEventMonth">
@@ -113,6 +114,10 @@
     <p>{{ event.getLocation() }}</p>
     <h3>Time: </h3>
     <p>{{ event.getTime() }}</p>
+    <h3>Attendees: </h3>
+    <p *ngFor="let attendee of event.getAttendees()">{{ attendee }}</p>
+    <button ion-button *ngIf="!userAttending()" (click)="joinEvent()">Join</button>
+    <button ion-button *ngIf="userAttending()" (click)="leaveEvent()">Leave</button>
   </ng-template>
 
 </ion-content>

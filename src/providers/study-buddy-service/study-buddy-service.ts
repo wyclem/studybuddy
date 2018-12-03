@@ -47,7 +47,8 @@ export class StudyBuddyServiceProvider {
       snapshot.forEach(childSnapshot => {
         let name = childSnapshot.val().name;
         let groupKey = childSnapshot.key;
-        let group = new Group(name, groupKey);
+        let members = childSnapshot.val().members;
+        let group = new Group(name, groupKey, members);
         this.groups.push(group);
       });
       this.notifySubscribers();
@@ -73,7 +74,8 @@ export class StudyBuddyServiceProvider {
         }
         let groupKey = childSnapshot.val().groupKey;
         let noteKey = childSnapshot.key;
-        let note = new Note(name, textNotesList, imageNotesList, groupKey, noteKey);
+        let ownerKey = childSnapshot.val().ownerKey;
+        let note = new Note(name, textNotesList, imageNotesList, groupKey, noteKey, ownerKey);
         this.notes.push(note);
       });
       console.log(this.notes);
@@ -89,7 +91,8 @@ export class StudyBuddyServiceProvider {
         let attendees = childSnapshot.val().attendees;
         let groupKey = childSnapshot.val().groupKey;
         let eventKey = childSnapshot.key;
-        let event = new Event(name, location, time, attendees, groupKey, eventKey);
+        let ownerKey = childSnapshot.val().ownerKey;
+        let event = new Event(name, location, time, attendees, groupKey, eventKey, ownerKey);
         this.events.push(event);
       });
       this.notifySubscribers();
@@ -97,7 +100,25 @@ export class StudyBuddyServiceProvider {
   }
 
   public getGroups() {
-    return this.groups;
+    let groupsClone = [];
+    for (let g of this.groups) {
+      let groupClone = JSON.parse(JSON.stringify(g));
+      groupsClone.push(new Group(groupClone['groupName'], groupClone['groupKey'], groupClone['members']));
+    }
+    return groupsClone;
+  }
+
+  public getGroupsForUser() {
+    let groupsClone = [];
+    for (let g of this.groups) {
+      for (let member of g.getMembers()) {
+        if (this.activeUser.getUserKey() === member) {
+          let groupClone = JSON.parse(JSON.stringify(g));
+          groupsClone.push(new Group(groupClon['groupName'], groupClone['groupKey'], groupClone['members']));
+        }
+      }
+    }
+    return groupsClone;
   }
 
   private notifySubscribers() {
@@ -121,7 +142,9 @@ export class StudyBuddyServiceProvider {
   public getGroupByKey(groupKey: string) {
     for (let group of this.groups) {
       if (group.getKey() === groupKey) {
-        return group;
+        let groupClone = JSON.parse(JSON.stringify(group));
+        let groupObjectClone = new Group(groupClone['groupName'], groupClone['groupKey']);
+        return groupObjectClone;
       }
     }
   }
@@ -134,7 +157,8 @@ export class StudyBuddyServiceProvider {
     let groupNotes = [];
     for (let note of this.notes) {
       if (note.getGroupKey() === groupKey) {
-        groupNotes.push(note);
+        let noteClone = JSON.parse(JSON.stringify(note));
+        groupNotes.push(new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey']));
       }
     }
     return groupNotes;
@@ -143,9 +167,22 @@ export class StudyBuddyServiceProvider {
   public getNoteByKey(noteKey: string) {
     for (let note of this.notes) {
       if (note.getNoteKey() === noteKey) {
-        return note;
+        let noteClone = JSON.parse(JSON.stringify(note));
+        let noteObjectClone = new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey']);
+        return noteObjectClone;
       }
     }
+  }
+
+  public getNotesForUser() {
+    let notesClone = [];
+    for (let note of this.notes) {
+      if (this.activeUser.getUserKey() === note.getOwnerKey()) {
+        let noteClone = JSON.parse(JSON.stringify(note));
+        notesClone.push(new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey']));
+      }
+    }
+    return notesClone;
   }
 
   public addNote(note: Note) {
@@ -155,7 +192,8 @@ export class StudyBuddyServiceProvider {
       name: note.getName(),
       textNotes: note.getTextNotes(),
       imageNotes: note.getImageNotes(),
-      groupKey: note.getGroupKey()
+      groupKey: note.getGroupKey(),
+      ownerKey: note.getOwnerKey()
     }
     noteRef.set(dataRecord);
     this.notifySubscribers();
@@ -168,9 +206,17 @@ export class StudyBuddyServiceProvider {
       name: note.getName(),
       textNotes: note.getTextNotes(),
       imageNotes: note.getImageNotes(),
-      groupKey: note.getGroupKey()
+      groupKey: note.getGroupKey(),
+      ownerKey: note.getOwnerKey()
     }
     childRef.set(dataRecord);
+    this.notifySubscribers();
+  }
+
+  public removeNote(noteKey: string) {
+    let parentRef = this.db.ref('/Notes');
+    let childRef = parentRef.child(noteKey);
+    childRef.remove();
     this.notifySubscribers();
   }
 
@@ -178,7 +224,8 @@ export class StudyBuddyServiceProvider {
     let groupEvents = [];
     for (let event of this.events) {
       if (event.getGroupKey() === groupKey) {
-        groupEvents.push(event);
+        let eventClone = JSON.parse(JSON.stringify(event));
+        groupEvents.push(new Event(eventClone['eventName'], eventClone['eventLocation'], eventClone['eventTime'], eventClone['eventAttendees'], eventClone['groupKey'], eventClone['eventKey'], eventClone['ownerKey']));
       }
     }
     return groupEvents;
@@ -187,7 +234,21 @@ export class StudyBuddyServiceProvider {
   public getEventByKey(eventKey: string) {
     for (let event of this.events) {
       if (event.getEventKey() === eventKey) {
-        return event;
+        let eventClone = JSON.parse(JSON.stringify(event));
+        let eventObjectClone = new Event(eventClone['eventName'], eventClone['eventLocation'], eventClone['eventTime'], eventClone['eventAttendees'], eventClone['groupKey'], eventClone['eventKey'], eventClone['ownerKey']);
+        return eventObjectClone;
+      }
+    }
+  }
+
+  public getEventsForUser() {
+    let eventsClone = [];
+    for (let event of this.events) {
+      for (let attendee of event.getAttendees()) {
+        if (this.activeUser.getUserName() === attendee) {
+          let eventClone = JSON.parse(JSON.stringify(event));
+          eventsClone.push(new Event(eventClone['eventName'], eventClone['eventLocation'], eventClone['eventTime'], eventClone['eventAttendees'], eventClone['groupKey'], eventClone['eventKey'], eventClone['ownerKey']));
+        }
       }
     }
   }
@@ -200,7 +261,8 @@ export class StudyBuddyServiceProvider {
       location: event.getLocation(),
       time: event.getTime(),
       attendees: event.getAttendees(),
-      groupKey: event.getGroupKey()
+      groupKey: event.getGroupKey(),
+      ownerKey: event.getOwnerKey()
     }
     childRef.set(dataRecord);
     this.notifySubscribers();
@@ -214,9 +276,17 @@ export class StudyBuddyServiceProvider {
       location: event.getLocation(),
       time: event.getTime(),
       attendees: event.getAttendees(),
-      groupKey: event.getGroupKey()
+      groupKey: event.getGroupKey(),
+      ownerKey: event.getOwnerKey()
     }
     childRef.set(dataRecord);
+    this.notifySubscribers();
+  }
+
+  public removeEvent(event: Event) {
+    let parentRef = this.db.ref("/Events");
+    let childRef = parentRef.child(event.getEventKey());
+    childRef.remove();
     this.notifySubscribers();
   }
 
