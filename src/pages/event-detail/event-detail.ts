@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Event } from '../../models/event-model';
 import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/study-buddy-service';
 import { User } from '../../models/user-model';
+import { HomePage} from '../home/home';
 
 /**
  * Generated class for the EventDetailPage page.
@@ -106,6 +107,10 @@ export class EventDetailPage {
 
   public cancelEvent() {
     this.navCtrl.pop();
+  }
+
+  public goHome() {
+    this.navCtrl.push(HomePage);
   }
 
   ionViewDidLoad() {

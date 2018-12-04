@@ -12,7 +12,10 @@ import { EventsPage } from '../pages/events/events';
 import { NotesPage } from '../pages/notes/notes';
 import { EventDetailPage } from '../pages/event-detail/event-detail';
 import { NoteDetailPage } from '../pages/note-detail/note-detail';
+import { BrowseGroupsPage } from '../pages/browse-groups/browse-groups';
 import { StudyBuddyServiceProvider } from '../providers/study-buddy-service/study-buddy-service';
+
+import { Camera } from '@ionic-native/camera';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import { StudyBuddyServiceProvider } from '../providers/study-buddy-service/stud
     NotesPage,
     EventDetailPage,
     NoteDetailPage,
-    LoginPage
+    LoginPage,
+    BrowseGroupsPage
   ],
   imports: [
     BrowserModule,
@@ -38,13 +42,15 @@ import { StudyBuddyServiceProvider } from '../providers/study-buddy-service/stud
     NotesPage,
     EventDetailPage,
     NoteDetailPage,
-    LoginPage
+    LoginPage,
+    BrowseGroupsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    StudyBuddyServiceProvider
+    StudyBuddyServiceProvider,
+    Camera
   ]
 })
 export class AppModule {}

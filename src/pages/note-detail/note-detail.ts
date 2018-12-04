@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/study-buddy-service';
 import { Note } from '../../models/note-model';
+import { HomePage } from '../home/home';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 /**
  * Generated class for the NoteDetailPage page.
@@ -64,6 +66,26 @@ export class NoteDetailPage {
 
   cancelNote() {
     this.navCtrl.pop();
+  }
+
+  public goHome() {
+    this.navCtrl.push(HomePage);
+  }
+
+  private takePick() {
+    const options: CameraOptions = {
+      quality: 50,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      if (imageData) {
+        let images = this.note.getImageNotes();
+        images.push('data:image/jpeg;base64,' + imageData);
+        this.note.setImageNotes(images);
+      }
+    });
   }
 
   ionViewDidLoad() {

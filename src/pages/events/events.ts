@@ -4,6 +4,7 @@ import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/s
 import { Event } from '../../models/event-model';
 import { EventDetailPage } from '../../pages/event-detail/event-detail';
 import { User } from '../../models/user-model';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the EventsPage page.
@@ -52,6 +53,10 @@ export class EventsPage {
 
   public removeEvent(event: Event) {
     this.studyBuddyService.removeEvent(event);
+  }
+
+  public goHome() {
+    this.navCtrl.push(HomePage);
   }
 
   ionViewDidLoad() {

@@ -4,6 +4,7 @@ import { EventsPage } from '../events/events';
 import { NotesPage } from '../notes/notes';
 import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/study-buddy-service';
 import { Group } from '../../models/group-model';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the GroupDetailPage page.
@@ -32,6 +33,10 @@ export class GroupDetailPage {
 
   public viewNotes() {
     this.navCtrl.push(NotesPage, {"groupKey": this.groupKey});
+  }
+
+  public goHome() {
+    this.navCtrl.push(HomePage);
   }
 
   public viewEvents() {

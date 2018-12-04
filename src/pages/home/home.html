@@ -8,13 +8,30 @@
 
 <ion-content padding>
   <h2>Welcome {{ user.getUserName() }}!</h2>
+  <h3>My Groups</h3>
   <ion-list>
     <ion-item *ngFor="let group of groups">
       <h3 (click)="visitGroup(group.getKey())">{{ group.getName() }}</h3>
-    </ion-item>
-    <ion-item>
-      <ion-input [(ngModel)]="newGroupName" placeholder="New Group..."></ion-input>
+      <button ion-button (click)="leaveGroup(group)">Leave Group</button>
     </ion-item>
   </ion-list>
-  <button ion-button (click)="addGroup()">Add Group</button>
+  <div>
+    <button ion-button (click)="browseGroups()">Browse All Groups</button>
+  </div>
+  <h3>My Events</h3>
+  <ion-list>
+    <ion-item *ngFor="let event of events">
+      <h3 (click)="viewEvent(event)">{{ event.getName() }}</h3>
+      <button ion-button *ngIf="user.getUserKey() === event.getOwnerKey()" (click)="editEvent(event)">Edit</button>
+      <button ion-button *ngIf="user.getUserKey() === event.getOwnerKey()" (click)="removeEvent(event)">Delete</button>
+    </ion-item>
+  </ion-list>
+  <h3>My Note Sets</h3>
+  <ion-list>
+    <ion-item *ngFor="let note of notes">
+      <h3 (click)="viewNote(note)">{{ note.getName() }}</h3>
+      <button ion-button (click)="editNote(note)">Edit</button>
+      <button ion-button (click)="removeNote(note)">Delete</button>
+    </ion-item>
+  </ion-list>
 </ion-content>

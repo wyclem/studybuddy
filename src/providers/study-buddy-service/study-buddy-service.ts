@@ -48,6 +48,9 @@ export class StudyBuddyServiceProvider {
         let name = childSnapshot.val().name;
         let groupKey = childSnapshot.key;
         let members = childSnapshot.val().members;
+        if (members === undefined) {
+          members = [];
+        }
         let group = new Group(name, groupKey, members);
         this.groups.push(group);
       });
@@ -114,7 +117,7 @@ export class StudyBuddyServiceProvider {
       for (let member of g.getMembers()) {
         if (this.activeUser.getUserKey() === member) {
           let groupClone = JSON.parse(JSON.stringify(g));
-          groupsClone.push(new Group(groupClon['groupName'], groupClone['groupKey'], groupClone['members']));
+          groupsClone.push(new Group(groupClone['groupName'], groupClone['groupKey'], groupClone['members']));
         }
       }
     }
@@ -129,13 +132,25 @@ export class StudyBuddyServiceProvider {
     return this.clientObservable;
   }
 
-  public addGroup(groupName: string) {
+  public addGroup(group: Group) {
     let listRef = this.db.ref('/Groups');
     let entryRef = listRef.push();
     let dataRecord = {
-      name: groupName
+      name: group.getName(),
+      members: group.getMembers()
     };
     entryRef.set(dataRecord);
+    this.notifySubscribers();
+  }
+
+  public updateGroup(group: Group) {
+    let groupsRef = this.db.ref('/Groups');
+    let childRef = groupsRef.child(group.getKey());
+    let dataRecord = {
+      name: group.getName(),
+      members: group.getMembers()
+    }
+    childRef.set(dataRecord);
     this.notifySubscribers();
   }
 
@@ -143,7 +158,7 @@ export class StudyBuddyServiceProvider {
     for (let group of this.groups) {
       if (group.getKey() === groupKey) {
         let groupClone = JSON.parse(JSON.stringify(group));
-        let groupObjectClone = new Group(groupClone['groupName'], groupClone['groupKey']);
+        let groupObjectClone = new Group(groupClone['groupName'], groupClone['groupKey'], groupClone['members']);
         return groupObjectClone;
       }
     }
@@ -251,6 +266,7 @@ export class StudyBuddyServiceProvider {
         }
       }
     }
+    return eventsClone;
   }
 
   public addEvent(event: Event) {

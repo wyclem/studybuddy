@@ -4,6 +4,7 @@ import { Note } from '../../models/note-model';
 import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/study-buddy-service';
 import { NoteDetailPage } from '../note-detail/note-detail';
 import { User } from '../../models/user-model';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the NotesPage page.
@@ -56,6 +57,10 @@ export class NotesPage {
 
   removeNote(noteKey: string) {
     this.studyBuddyService.removeNote(noteKey);
+  }
+
+  public goHome() {
+    this.navCtrl.push(HomePage);
   }
 
 }
