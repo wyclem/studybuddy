@@ -4,6 +4,7 @@ import { Event } from '../../models/event-model';
 import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/study-buddy-service';
 import { User } from '../../models/user-model';
 import { HomePage} from '../home/home';
+import { EventsPage } from '../events/events';
 
 /**
  * Generated class for the EventDetailPage page.
@@ -111,6 +112,10 @@ export class EventDetailPage {
 
   public goHome() {
     this.navCtrl.push(HomePage);
+  }
+
+  public goToEvents() {
+    this.navCtrl.push(EventsPage, {"groupKey": this.event.getGroupKey()});
   }
 
   ionViewDidLoad() {

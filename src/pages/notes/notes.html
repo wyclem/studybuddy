@@ -6,12 +6,20 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <button ion-button clear icon-only (click)="goHome()">
-      <ion-icon name="home"></ion-icon>
-    </button>
-    
-    <ion-title>notes</ion-title>
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button clear icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+      <button ion-button (click)="goToGroup()">
+        Group
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-navbar hideBackButton="true">
+
+    <ion-title>Notes</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -20,14 +28,14 @@
 <ion-content padding>
   <ion-list>
     <ion-item *ngFor="let note of notes">
-      <p (click)="viewNote(note.getNoteKey())">{{ note.getName() }}</p>
-      <button ion-button *ngIf="note.getOwnerKey() === user.getUserKey()" (click)="editNote(note.getNoteKey())">Edit</button>
-      <button ion-button *ngIf="note.getOwnerKey() === user.getUserKey()" (click)="removeNote(note.getNoteKey())">Delete</button>
+      <h2 (click)="viewNote(note.getNoteKey())">{{ note.getName() }}</h2>
+      <button ion-button outline color="secondary" item-end *ngIf="note.getOwnerKey() === user.getUserKey()" (click)="editNote(note.getNoteKey())">Edit</button>
+      <button ion-button outline color="danger" item-end *ngIf="note.getOwnerKey() === user.getUserKey()" (click)="removeNote(note.getNoteKey())">Delete</button>
     </ion-item>
     <ion-item>
       <ion-input [(ngModel)]="newNoteName" placeholder="New Note Set..."></ion-input>
     </ion-item>
   </ion-list>
 
-  <button ion-button (click)="addNote()">Add Note</button>
+  <button ion-button full color="secondary" (click)="addNote()">Add Note</button>
 </ion-content>

@@ -5,6 +5,7 @@ import { Event } from '../../models/event-model';
 import { EventDetailPage } from '../../pages/event-detail/event-detail';
 import { User } from '../../models/user-model';
 import { HomePage } from '../home/home';
+import { GroupDetailPage } from '../group-detail/group-detail';
 
 /**
  * Generated class for the EventsPage page.
@@ -57,6 +58,10 @@ export class EventsPage {
 
   public goHome() {
     this.navCtrl.push(HomePage);
+  }
+
+  public goToGroup() {
+    this.navCtrl.push(GroupDetailPage, {"groupKey": this.groupKey});
   }
 
   ionViewDidLoad() {

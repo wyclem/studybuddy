@@ -1,37 +1,47 @@
 <ion-header>
   <ion-navbar hideBackButton="true">
     <ion-title>
-      Groups
+      Home
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="content" padding>
   <h2>Welcome {{ user.getUserName() }}!</h2>
-  <h3>My Groups</h3>
-  <ion-list>
-    <ion-item *ngFor="let group of groups">
-      <h3 (click)="visitGroup(group.getKey())">{{ group.getName() }}</h3>
-      <button ion-button (click)="leaveGroup(group)">Leave Group</button>
-    </ion-item>
-  </ion-list>
-  <div>
-    <button ion-button (click)="browseGroups()">Browse All Groups</button>
-  </div>
-  <h3>My Events</h3>
-  <ion-list>
-    <ion-item *ngFor="let event of events">
-      <h3 (click)="viewEvent(event)">{{ event.getName() }}</h3>
-      <button ion-button *ngIf="user.getUserKey() === event.getOwnerKey()" (click)="editEvent(event)">Edit</button>
-      <button ion-button *ngIf="user.getUserKey() === event.getOwnerKey()" (click)="removeEvent(event)">Delete</button>
-    </ion-item>
-  </ion-list>
-  <h3>My Note Sets</h3>
-  <ion-list>
-    <ion-item *ngFor="let note of notes">
-      <h3 (click)="viewNote(note)">{{ note.getName() }}</h3>
-      <button ion-button (click)="editNote(note)">Edit</button>
-      <button ion-button (click)="removeNote(note)">Delete</button>
-    </ion-item>
-  </ion-list>
+  <ion-card>
+    <ion-card-content>
+      <h3 class="card-header">My Groups</h3>
+      <ion-list>
+        <ion-item class="card-item" *ngFor="let group of groups">
+          <h3 (click)="visitGroup(group.getKey())">{{ group.getName() }}</h3>
+          <button ion-button item-end color="danger" outline (click)="leaveGroup(group)">Leave Group</button>
+        </ion-item>
+      </ion-list>
+      <button ion-button outline full (click)="browseGroups()">Browse All Groups</button>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <h3 class="card-header">My Events</h3>
+      <ion-list>
+        <ion-item *ngFor="let event of events">
+          <h3 class="card-item" (click)="viewEvent(event)">{{ event.getName() }}</h3>
+          <button ion-button item-end color="secondary" outline *ngIf="user.getUserKey() === event.getOwnerKey()" (click)="editEvent(event)">Edit</button>
+          <button ion-button item-end color="danger" outline *ngIf="user.getUserKey() === event.getOwnerKey()" (click)="removeEvent(event)">Delete</button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <h3 class="card-header">My Note Sets</h3>
+      <ion-list>
+        <ion-item *ngFor="let note of notes" text-wrap>
+          <h3 class="card-item" (click)="viewNote(note)">{{ note.getName() }}</h3>
+          <button ion-button item-end color="secondary" outline (click)="editNote(note)">Edit</button>
+          <button ion-button item-end color="danger" outline (click)="removeNote(note)">Delete</button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

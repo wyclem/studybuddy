@@ -5,6 +5,7 @@ import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/s
 import { NoteDetailPage } from '../note-detail/note-detail';
 import { User } from '../../models/user-model';
 import { HomePage } from '../home/home';
+import { GroupDetailPage } from '../group-detail/group-detail';
 
 /**
  * Generated class for the NotesPage page.
@@ -57,6 +58,10 @@ export class NotesPage {
 
   removeNote(noteKey: string) {
     this.studyBuddyService.removeNote(noteKey);
+  }
+
+  public goToGroup() {
+    this.navCtrl.push(GroupDetailPage, {"groupKey": this.groupKey});
   }
 
   public goHome() {

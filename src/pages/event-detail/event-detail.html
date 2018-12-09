@@ -5,20 +5,26 @@
   Ionic pages and navigation.
 -->
 <ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button clear icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+      <button ion-button (click)="goToEvents()">
+        Group Events
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 
-  <ion-navbar>
-    <button ion-button clear icon-only (click)="goHome()">
-      <ion-icon name="home"></ion-icon>
-    </button>
-    
-    <ion-title>event-detail</ion-title>
+  <ion-navbar hideBackButton="true">
+
+    <ion-title>{{ event.getName() }}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <h2>{{ event.getName() }}</h2>
   <div *ngIf="editing; else static">
     <ion-item>
       <ion-label stacked>Location:</ion-label>
@@ -110,8 +116,8 @@
         <ion-option value="PM">PM</ion-option>
       </ion-select>
     </ion-item>
-    <button ion-button (click)="saveEvent()">Save</button>
-    <button ion-button (click)="cancelEvent()">Cancel</button>
+    <button ion-button color="secondary" (click)="saveEvent()">Save</button>
+    <button ion-button color="danger" (click)="cancelEvent()">Cancel</button>
   </div>
   <ng-template #static>
     <h3>Location: </h3>
@@ -120,8 +126,8 @@
     <p>{{ event.getTime() }}</p>
     <h3>Attendees: </h3>
     <p *ngFor="let attendee of event.getAttendees()">{{ attendee }}</p>
-    <button ion-button *ngIf="!userAttending()" (click)="joinEvent()">Join</button>
-    <button ion-button *ngIf="userAttending()" (click)="leaveEvent()">Leave</button>
+    <button ion-button color="secondary" *ngIf="!userAttending()" (click)="joinEvent()">Join</button>
+    <button ion-button color="danger" *ngIf="userAttending()" (click)="leaveEvent()">Leave</button>
   </ng-template>
 
 </ion-content>

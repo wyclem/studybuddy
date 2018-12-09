@@ -1,3 +1,5 @@
+import { Comment } from './comment-model';
+
 export class Note {
 
   private noteName: string;
@@ -6,14 +8,16 @@ export class Note {
   private groupKey: string;
   private noteKey: string;
   private ownerKey: string;
+  private comments: Comment[];
 
-  constructor(name: string, text: string[], images: string[], groupKey: string, noteKey: string, ownerKey: string) {
+  constructor(name: string, text: string[], images: string[], groupKey: string, noteKey: string, ownerKey: string, comments: Comment[]) {
     this.noteName = name;
     this.textNotes = text;
     this.imageNotes = images;
     this.groupKey = groupKey;
     this.noteKey = noteKey;
     this.ownerKey = ownerKey;
+    this.comments = comments;
   }
 
   public setName(newName: string) {
@@ -26,6 +30,10 @@ export class Note {
 
   public setImageNotes(newImageNotes: string[]) {
     this.imageNotes = newImageNotes;
+  }
+
+  public setComments(newComments: Comment[]) {
+    this.comments = newComments;
   }
 
   public getName() {
@@ -50,5 +58,9 @@ export class Note {
 
   public getOwnerKey() {
     return this.ownerKey;
+  }
+
+  public getComments() {
+    return this.comments;
   }
 }

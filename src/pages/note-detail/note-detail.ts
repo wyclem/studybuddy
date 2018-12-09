@@ -4,6 +4,11 @@ import { StudyBuddyServiceProvider } from '../../providers/study-buddy-service/s
 import { Note } from '../../models/note-model';
 import { HomePage } from '../home/home';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Slides } from 'ionic-angular';
+import { ViewChild } from '@angular/core';
+import { Comment } from '../../models/comment-model';
+import { User } from '../../models/user-model';
+import { NotesPage } from '../notes/notes';
 
 /**
  * Generated class for the NoteDetailPage page.
@@ -23,8 +28,11 @@ export class NoteDetailPage {
   private newTextNote: string ='';
   private editing: boolean;
   private textNotesCopy: string[];
+  private newCommentText: string = '';
+  private user: User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private studyBuddyService: StudyBuddyServiceProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private studyBuddyService: StudyBuddyServiceProvider, private camera: Camera) {
+    this.user = this.studyBuddyService.getActiveUser();
     this.note = undefined;
     this.groupKey = this.navParams.get("groupKey");
     this.editing = this.navParams.get("editing");
@@ -34,14 +42,17 @@ export class NoteDetailPage {
       let text = [];
       let images = [];
       let key = "";
-      let ownerKey = this.studyBuddyService.getActiveUser().getUserKey();
-      this.note = new Note(name, text, images, this.groupKey, key, ownerKey);
+      let ownerKey = this.user.getUserKey();
+      let comments = [];
+      this.note = new Note(name, text, images, this.groupKey, key, ownerKey, comments);
       this.textNotesCopy = this.note.getTextNotes();
     } else {
       this.note = this.studyBuddyService.getNoteByKey(noteKey);
       this.textNotesCopy = this.note.getTextNotes();
     }
   }
+
+  @ViewChild(Slides) slides: Slides;
 
   addNewTextNote() {
     if (this.newTextNote != "") {
@@ -72,7 +83,7 @@ export class NoteDetailPage {
     this.navCtrl.push(HomePage);
   }
 
-  private takePick() {
+  private takePic() {
     const options: CameraOptions = {
       quality: 50,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -86,6 +97,21 @@ export class NoteDetailPage {
         this.note.setImageNotes(images);
       }
     });
+  }
+
+  private addComment() {
+    if (this.newCommentText != '') {
+      let comment = new Comment(this.user.getUserName(), this.user.getUserKey(), this.newCommentText);
+      let noteComments = this.note.getComments();
+      noteComments.push(comment);
+      this.note.setComments(noteComments);
+      this.studyBuddyService.updateNote(this.note);
+      this.newCommentText = '';
+    }
+  }
+
+  private goToNotes() {
+    this.navCtrl.push(NotesPage, {"groupKey": this.note.getGroupKey()});
   }
 
   ionViewDidLoad() {

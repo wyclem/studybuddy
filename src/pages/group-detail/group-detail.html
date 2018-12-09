@@ -6,19 +6,23 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <button ion-button clear icon-only (click)="goHome()">
-      <ion-icon name="home"></ion-icon>
-    </button>
-    
-    <ion-title>group-detail</ion-title>
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button clear icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-navbar hideBackButton="true">
+
+    <ion-title>{{ group.getName() }}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <h2>{{ group.getName() }}</h2>
   <ion-list>
     <ion-item>
       <ion-label (click)="viewNotes()">Notes</ion-label>

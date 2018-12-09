@@ -6,39 +6,65 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <button ion-button clear icon-only (click)="goHome()">
-      <ion-icon name="home"></ion-icon>
-    </button>
-    
-    <ion-title>note-detail</ion-title>
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button clear icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+      <button ion-button small (click)="goToNotes()">
+        Group Notes
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-navbar hideBackButton="true">
+
+    <ion-title>{{ note.getName() }}</ion-title>
+
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <h2>{{ note.getGroupKey() }}</h2>
-  <h2>{{ note.getName() }}</h2>
-  <ion-item *ngFor="let textNote of textNotesCopy; index as i">
+  <h2>Text Notes:</h2>
+  <ion-item *ngFor="let textNote of textNotesCopy; index as i" text-wrap>
     {{ textNote }}
-    <button ion-button clear icon-only *ngIf="editing" (click)="removeNote(i)">
+    <button ion-button item-start clear color="danger" icon-only *ngIf="editing" (click)="removeNote(i)">
       <ion-icon name="close-circle"></ion-icon>
     </button>
   </ion-item>
   <ion-item *ngIf="editing">
     <ion-input [(ngModel)]="newTextNote" placeholder="New Note..."></ion-input>
   </ion-item>
-  <button ion-button *ngIf="editing" (click)="addNewTextNote()">Add New Text Note</button>
-  <div *ngFor="let imageNote of note.getImageNotes()">
-    <img [src]="imageNote">
+  <button ion-button color="secondary" *ngIf="editing" (click)="addNewTextNote()">Add New Text Note</button>
+  <h2>Images:</h2>
+  <div *ngIf="note.getImageNotes() != []">
+    <ion-slides zoom="true">
+      <ion-slide *ngFor="let image of note.getImageNotes()">
+        <img [src]="image">
+      </ion-slide>
+    </ion-slides>
   </div>
   <div *ngIf="editing">
-    <button ion-button (click)="addNewImageNote()">Add New Image</button>
+    <div>
+      <button ion-button color="secondary" (click)="takePic()">Add Picture</button>
+    </div>
+    <div>
+      <button ion-button color="secondary" (click)="saveNote()">Save</button>
+      <button ion-button color="danger" (click)="cancelNote()">Cancel</button>
+    </div>
   </div>
-  <div *ngIf="editing">
-    <button ion-button (click)="saveNote()">Save</button>
-    <button ion-button (click)="cancelNote()">Cancel</button>
-  </div>
+  <h2 *ngIf="!editing">Comments:</h2>
+  <ion-list *ngIf="!editing">
+    <ion-item *ngFor="let comment of note.getComments()">
+      <h4>{{ comment.getUserName() }}:</h4>
+      <p>{{ comment.getText() }}</p>
+    </ion-item>
+    <ion-item>
+      <ion-textarea [(ngModel)]="newCommentText" placeholder="New Comment..."></ion-textarea>
+    </ion-item>
+    <button ion-button color="secondary" (click)="addComment()">Add Comment</button>
+  </ion-list>
 
 </ion-content>

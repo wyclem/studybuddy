@@ -6,12 +6,17 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <button ion-button clear icon-only (click)="goHome()">
-      <ion-icon name="home"></ion-icon>
-    </button>
-    
-    <ion-title>browse-groups</ion-title>
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button clear icon-only (click)="goHome()">
+        <ion-icon name="home"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-navbar hideBackButton="true">
+
+    <ion-title>All Groups</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -21,15 +26,14 @@
   <ion-item>
     <ion-input [(ngModel)]="newGroupName" placeholder="New Group..."></ion-input>
   </ion-item>
-  <button ion-button (click)="addGroup()">Create Group</button>
+  <button ion-button full color="secondary" (click)="addGroup()">Create Group</button>
   <h2>All Groups</h2>
   <ion-list>
     <ion-item *ngFor="let group of groups">
       <h3 (click)="viewGroup(group)">{{ group.getName() }}</h3>
-      <button ion-button *ngIf="!userIsMember(group)" (click)="joinGroup(group)">Join Group</button>
-      <button ion-button *ngIf="userIsMember(group)" (click)="leaveGroup(group)">Leave Group</button>
+      <button ion-button item-end outline color="secondary" *ngIf="!userIsMember(group)" (click)="joinGroup(group)">Join Group</button>
+      <button ion-button item-end outline color="danger" *ngIf="userIsMember(group)" (click)="leaveGroup(group)">Leave Group</button>
     </ion-item>
   </ion-list>
-  <button ion-button (click)="goHome()">Home</button>
 
 </ion-content>

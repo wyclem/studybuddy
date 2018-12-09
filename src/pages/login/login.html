@@ -7,29 +7,29 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>login</ion-title>
+    <ion-title>Weclome!</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <div *ngIf="!validUser" color="danger">
-    <p>The username or password entered does not match existing records</p>
-  </div>
-  <div *ngIf="userExists" color="danger">
-    <p>This username is already in use. Please choose a different username or login with existing credentials</p>
-  </div>
+  <ion-item *ngIf="!validUser" color="danger" text-wrap>
+    The username or password entered does not match existing records
+  </ion-item>
+  <ion-item *ngIf="userExists" color="danger" text-wrap>
+    This username is already in use. Please choose a different username or login with existing credentials.
+  </ion-item>
   <ion-list>
     <ion-item>
-      <ion-input [(ngModel)]="userName" placeholder="Username..."></ion-input>
+      <ion-input [(ngModel)]="userName" placeholder="Username..." autocapitalize="none"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input type="password" [(ngModel)]="password" placeholder="Password..."></ion-input>
     </ion-item>
     <ion-item>
       <button ion-button (click)="login()">Login</button>
-      <button ion-button (click)="createUser()">Create Account</button>
+      <button ion-button color="secondary" (click)="createUser()">Create Account</button>
     </ion-item>
   </ion-list>
 

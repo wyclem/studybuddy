@@ -6,6 +6,7 @@ import { Event } from '../../models/event-model';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { User } from '../../models/user-model';
+import { Comment } from '../../models/comment-model';
 
 import firebase from 'firebase';
 
@@ -78,7 +79,14 @@ export class StudyBuddyServiceProvider {
         let groupKey = childSnapshot.val().groupKey;
         let noteKey = childSnapshot.key;
         let ownerKey = childSnapshot.val().ownerKey;
-        let note = new Note(name, textNotesList, imageNotesList, groupKey, noteKey, ownerKey);
+        let comments = [];
+        if (childSnapshot.val().comments != undefined){
+          for (let value of childSnapshot.val().comments) {
+            let comment = new Comment(value['userName'], value['userKey'], value['text']);
+            comments.push(comment);
+          }
+        }
+        let note = new Note(name, textNotesList, imageNotesList, groupKey, noteKey, ownerKey, comments);
         this.notes.push(note);
       });
       console.log(this.notes);
@@ -173,7 +181,11 @@ export class StudyBuddyServiceProvider {
     for (let note of this.notes) {
       if (note.getGroupKey() === groupKey) {
         let noteClone = JSON.parse(JSON.stringify(note));
-        groupNotes.push(new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey']));
+        let comments = [];
+        for (let comment of noteClone['comments']) {
+          comments.push(new Comment(comment['userName'], comment['userKey'], comment['text']));
+        }
+        groupNotes.push(new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey'], comments));
       }
     }
     return groupNotes;
@@ -183,7 +195,11 @@ export class StudyBuddyServiceProvider {
     for (let note of this.notes) {
       if (note.getNoteKey() === noteKey) {
         let noteClone = JSON.parse(JSON.stringify(note));
-        let noteObjectClone = new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey']);
+        let comments = [];
+        for (let comment of noteClone['comments']) {
+          comments.push(new Comment(comment['userName'], comment['userKey'], comment['text']));
+        }
+        let noteObjectClone = new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey'], comments);
         return noteObjectClone;
       }
     }
@@ -194,7 +210,7 @@ export class StudyBuddyServiceProvider {
     for (let note of this.notes) {
       if (this.activeUser.getUserKey() === note.getOwnerKey()) {
         let noteClone = JSON.parse(JSON.stringify(note));
-        notesClone.push(new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey']));
+        notesClone.push(new Note(noteClone['noteName'], noteClone['textNotes'], noteClone['imageNotes'], noteClone['groupKey'], noteClone['noteKey'], noteClone['ownerKey'], noteClone['comments']));
       }
     }
     return notesClone;
@@ -208,7 +224,8 @@ export class StudyBuddyServiceProvider {
       textNotes: note.getTextNotes(),
       imageNotes: note.getImageNotes(),
       groupKey: note.getGroupKey(),
-      ownerKey: note.getOwnerKey()
+      ownerKey: note.getOwnerKey(),
+      comments: note.getComments()
     }
     noteRef.set(dataRecord);
     this.notifySubscribers();
@@ -222,7 +239,8 @@ export class StudyBuddyServiceProvider {
       textNotes: note.getTextNotes(),
       imageNotes: note.getImageNotes(),
       groupKey: note.getGroupKey(),
-      ownerKey: note.getOwnerKey()
+      ownerKey: note.getOwnerKey(),
+      comments: note.getComments()
     }
     childRef.set(dataRecord);
     this.notifySubscribers();
